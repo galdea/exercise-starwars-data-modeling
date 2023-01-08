@@ -17,8 +17,8 @@ Base = declarative_base()
 
 class Follower:
     __tablename__ = 'Followers'
-    user_from_id = Column(Integer)
-    user_to_id = Column(Integer)
+    user_from_id = Column(Integer, ForeignKey('Users.id'))
+    user_to_id = Column(Integer, ForeignKey('Users.id'))
 
 class User(Base):
     __tablename__ = 'Users'
@@ -29,22 +29,22 @@ class User(Base):
 
 class Post(Base):
     __tablename__ = 'Post'
-    ID = Column(Integer, primary_key=True)
-    name = Column(String)
+    ID = Column(Integer, primary_key=True) # Add primary key
+    user_id = Column(Integer, ForeignKey('Users.id'))
 
 class Comment(Base):
     __tablename__ = 'Comment'
     ID = Column(Integer, primary_key=True)  # Add primary key
     post_id = Column(Integer, ForeignKey('Post.ID'))
-    user_id = Column(Integer, ForeignKey('Users.id'))
+    author_id = Column(Integer, ForeignKey('Users.id'))
     comment_text = Column(String)
 
 class Media(Base):
     __tablename__ = 'Media'
-    ID = Column(Integer, ForeignKey('Users.id'), primary_key=True)
+    ID = Column(Integer, primary_key=True)
     type = Enum('active', 'inactive', 'pending')
     url = Column(String)
-    post_id = Column(Integer)
+    post_id = Column(Integer, ForeignKey('Post.ID'))
 
 ## Draw from SQLAlchemy base
 render_er(Base, 'diagram.png')
